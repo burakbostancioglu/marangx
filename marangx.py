@@ -4,9 +4,12 @@ from marathon import MarathonClient
 
 
 
-def run(url, nginx_conf_loc):
-    m_c = MarathonClient(url)
-    conf_tpl = open("nginx.conf.tpl", "r")
+def run(marathon, nginx, domain_map= None):
+    urls = marathon.values()
+    m_c = MarathonClient(urls)
+    import ipdb
+    ipdb.set_trace()
+    conf_tpl = open(nginx['tpl'], "r")
     conf_tpl_string = conf_tpl.read()
     conf_tpl.close()
     conf = Template(conf_tpl_string)
@@ -30,6 +33,8 @@ def run(url, nginx_conf_loc):
         print(conf_string)
 
     def get_server(host, port):
+        if domain_map and domain_map.get('host'):
+            host = domain_map.get('host')
         return 'server {host}:{port}'.format(
             host=host,
             port=port
@@ -44,5 +49,5 @@ def run(url, nginx_conf_loc):
     def callback_func(event):
         if event.name == 'deployment_success':
             load_apps()
-    cl = EventSourceClient(url+"/v2/events", callback=callback_func)
+    cl = EventSourceClient(urls[0]+"/v2/events", callback=callback_func)
     cl.poll()
