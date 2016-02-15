@@ -34,7 +34,7 @@ class EventSourceClient(object):
     """
     This module opens a new connection to an eventsource server, and wait for events.
     """
-    def __init__(self, url, action, target, callback = None, retry = 0, keep_alive = False, ssl = False, validate_cert = False, user = None, password = None):
+    def __init__(self, url, callback = None, retry = 0, keep_alive = False, ssl = False, validate_cert = False, user = None, password = None):
         """
         Build the event source client
         :param url: string, the url to connect to
@@ -43,13 +43,13 @@ class EventSourceClient(object):
         :param callback: function with one parameter (Event) that gets called for each received event
         :param retry: timeout between two reconnections (0 means no reconnection)
         """
-        log.debug("EventSourceClient(%s,%s,%s,%s,%s)" % (url, action, target, callback, retry))
+        log.debug("EventSourceClient(%s,%s,%s)" % (url, callback, retry))
 
         self.data_partial = None
         self.last_event_id = None
         self.retry_timeout = int(retry)
         self.keep_alive = keep_alive
-        self._url = "%s://%s/%s/%s" % ("https" if ssl else "http", url, action, target)
+        self._url = url
         self._headers = {"Accept": "text/event-stream"}
         self._user = user
         self._password = password
@@ -167,7 +167,6 @@ class EventSourceClient(object):
         if event.name is not None:
             self.cb(event)
 
-
     def handle_request(self, response):
         """
         Function that gets called on non long-polling actions,
@@ -188,101 +187,3 @@ class EventSourceClient(object):
             if not self.keep_alive:
                 self.retry_timeout=-1
         IOLoop.instance().stop()
-
-def start():
-    """helper method to create a commandline utility"""
-    parser = argparse.ArgumentParser(prog = sys.argv[0],
-                                     description="Event Source Client")
-    parser.add_argument("-H",
-                        "--host",
-                        dest="host",
-                        default="127.0.0.1",
-                        help="Host to connect to")
-    # PORT ARGUMENT
-    parser.add_argument("-P",
-                        "--port",
-                        dest="port",
-                        help="Port to be used connection")
-
-    parser.add_argument("-S",
-                        "--ssl",
-                        dest="ssl",
-                        action="store_true",
-                        help="enables HTTPS scheme support")
-
-    parser.add_argument("-V",
-                        "--validate-cert",
-                        dest="validate_cert",
-                        action="store_true",
-                        help="Forces HTTPS certificate validation")
-
-    parser.add_argument("-d",
-                        "--debug",
-                        dest="debug",
-                        action="store_true",
-                        help="enables debug output")
-
-    parser.add_argument("-r",
-                        "--retry",
-                        dest="retry",
-                        default="0",
-                        help="Reconnection delay (in microseconds)")
-
-    parser.add_argument("-k",
-                        "--keep-reconnecting",
-                        dest="keep_alive",
-                        action="store_true",
-                        help="Keep trying to reconnect on disconnection")
-
-    parser.add_argument("-a",
-                        "--action",
-                        dest="action",
-                        default="poll",
-                        help="The listening action to connect to")
-
-
-    parser.add_argument("-u",
-                        "--user",
-                        dest="user",
-                        help="Username for basic authentication")
-
-    parser.add_argument("-p",
-                        "--password",
-                        dest="password",
-                        help="Password for basic authentication")
-
-    parser.add_argument(dest="token",
-                        help="Token to be used for connection")
-
-    args = parser.parse_args()
-
-    if args.debug:
-        logging.basicConfig(level = logging.DEBUG)
-    else:
-        logging.basicConfig(level = logging.INFO)
-
-    ###
-
-    if not args.port:
-        if args.ssl:
-            port = "443"
-        else:
-            port = "80"
-    else:
-        port = args.port
-
-    EventSourceClient(url="%s:%s" % (args.host, port),
-                      action = args.action,
-                      target = args.token,
-                      retry = args.retry,
-                      keep_alive = args.keep_alive,
-                      ssl = args.ssl,
-                      validate_cert = args.validate_cert,
-                      user = args.user,
-                      password = args.password).poll()
-
-    ###
-
-
-if __name__ == "__main__":
-    start()
