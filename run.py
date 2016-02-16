@@ -1,6 +1,6 @@
 import sys, getopt
 from marangx import run
-import staticconf
+import jsoncfg
 def main(argv):
     conf = {}
     try:
@@ -14,10 +14,9 @@ def main(argv):
     if not(conf.get('conf')):
         print('missing params')
         sys.exit(1)
-    config = staticconf.JSONConfiguration(conf['conf'])
-    import ipdb
-    ipdb.set_trace()
-    run(**config)
+    config = jsoncfg.load_config(conf['conf'])
+
+    run(config.marathon, config.nginx, config.domain_map)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

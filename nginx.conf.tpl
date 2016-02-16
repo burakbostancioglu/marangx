@@ -1,13 +1,14 @@
 worker_processes  auto;
 events {
-worker_connections 769;
+    worker_connections 769;
 }
 http {
-    upstream ascmsServers {
+    upstream ascmsServers
+    {
         $ascmsUpstream
     }
-
-    upstream amsServers {
+    upstream amsServers
+    {
         $amsUpStream
     }
 
@@ -17,7 +18,8 @@ http {
 
     error_log  /var/log/nginx/error.log warn;
 
-        location / {
+        location /
+        {
             # host and port to fastcgi server
             fastcgi_pass ascmsServers;
             fastcgi_param  GATEWAY_INTERFACE  CGI/1.1;
@@ -41,7 +43,9 @@ http {
             fastcgi_max_temp_file_size 0;
             fastcgi_buffer_size 4K;
             fastcgi_buffers 64 4k;
-        }location /auth {
+        }
+        location /auth
+        {
             fastcgi_pass amsServers;
             fastcgi_param  GATEWAY_INTERFACE  CGI/1.1;
             fastcgi_param  SERVER_SOFTWARE    nginx;
@@ -68,6 +72,5 @@ http {
         location /nginx_status {
             stub_status on;
         }
-}
 }
 daemon off;
