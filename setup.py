@@ -12,7 +12,8 @@ setup(name='marangx',
       install_requires=[
             'ipdb==0.8.1',
             'marathon',
-            'json-cfg==0.3.4'
+            'json-cfg==0.3.4',
+            'tornado'
       ],
       dependency_links=[
           "git+ssh://git@github.com/burakbostancioglu/marathon-python.git#egg=marathon"
