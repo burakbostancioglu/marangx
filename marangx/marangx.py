@@ -1,9 +1,12 @@
 from string import Template
-from event_source_client import EventSourceClient
-from marathon import MarathonClient
 import json
-import jsoncfg
 from multiprocessing import Process
+
+from marathon import MarathonClient
+import jsoncfg
+
+from event_source_client import EventSourceClient
+
 
 def run(marathon, nginx, domain_map= None):
     urls = []

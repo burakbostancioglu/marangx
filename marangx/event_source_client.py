@@ -9,9 +9,7 @@
 .. moduleauthor:: Коренберг Марк
 
 """
-import sys
 import time
-import argparse
 import logging
 log = logging.getLogger("eventsource.client")
 

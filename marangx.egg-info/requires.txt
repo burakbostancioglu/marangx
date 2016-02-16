@@ -1,0 +1,3 @@
+ipdb==0.8.1
+marathon
+json-cfg==0.3.4

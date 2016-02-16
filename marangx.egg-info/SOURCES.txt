@@ -1,0 +1,10 @@
+setup.py
+marangx/__init__.py
+marangx/__main__.py
+marangx/event_source_client.py
+marangx/marangx.py
+marangx.egg-info/PKG-INFO
+marangx.egg-info/SOURCES.txt
+marangx.egg-info/dependency_links.txt
+marangx.egg-info/requires.txt
+marangx.egg-info/top_level.txt

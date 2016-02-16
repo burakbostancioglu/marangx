@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: marangx
+Version: 1.0a0
+Summary: Nginx conf compiler for Marathon apps
+Home-page: https://github.com/burakbostancioglu/marangx
+Author: Burak Bostancioglu
+Author-email: bostancioglub@gmail.com
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
